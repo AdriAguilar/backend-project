@@ -25,7 +25,7 @@ class UsersSeeder extends Seeder
                 'email' => fake()->email(),
                 'password' => fake()->password(),
                 'image' => Str::random(),
-                'rol' => Role::all()->random()->id
+                'role_id' => Role::all()->random()->id
             ]);
         }
     }
