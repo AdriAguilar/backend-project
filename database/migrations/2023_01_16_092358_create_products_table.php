@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price')->unsigned();
             $table->integer('quantity')->unsigned();
             $table->boolean('stock');
-            $table->json('images'); // Almacena un array de string (las imagenes).
+            $table->text('images'); // Almacena un array de string (las imagenes).
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

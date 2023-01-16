@@ -21,7 +21,7 @@ class ProductsSeeder extends Seeder
             DB::table('products')->insert([
                 'name' => fake()->name(),
                 'description' => fake()->text(),
-                'price' => fake()->randomFloat(2),
+                'price' => fake()->randomFloat(2, 0, 10000),
                 'quantity' => fake()->numberBetween(0, 10),
                 'stock' => fake()->boolean(),
                 'images' => fake()->imageUrl(),
