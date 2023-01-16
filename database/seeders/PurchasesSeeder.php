@@ -20,7 +20,7 @@ class PurchasesSeeder extends Seeder
     {
         $rows = 6;
         for ($i=0; $i < $rows; $i++) {             
-            DB::table('users')->insert([
+            DB::table('purchases')->insert([
                 'product_id' => Product::all()->random()->id,
                 'user_id' => User::all()->random()->id,
                 'address' => fake()->address(),

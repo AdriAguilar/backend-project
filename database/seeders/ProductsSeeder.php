@@ -18,7 +18,7 @@ class ProductsSeeder extends Seeder
     {
         $rows = 12;
         for ($i=0; $i < $rows; $i++) {             
-            DB::table('users')->insert([
+            DB::table('products')->insert([
                 'name' => fake()->name(),
                 'description' => fake()->text(),
                 'price' => fake()->randomFloat(2),
