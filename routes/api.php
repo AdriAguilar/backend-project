@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,4 +41,8 @@ Route::prefix('comment')->group(function () {
     Route::get('/{id}', [CommentController::class, 'show']);
     Route::get('/{id}/product', [CommentController::class, 'product']);
     Route::get('/{id}/user', [CommentController::class, 'user']);
+});
+
+Route::prefix('purchase')->group(function () {
+    Route::get('', [PurchaseController::class, 'index']);
 });
