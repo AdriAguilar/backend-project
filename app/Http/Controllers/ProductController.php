@@ -83,6 +83,13 @@ class ProductController extends Controller
         //
     }
 
+    // Relaciones
+
+    public function category($id)
+    {
+        $product = Product::find($id);
+        return $product->category ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
+    }
 
     public function seller($id)
     {

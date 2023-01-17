@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class ProductsSeeder extends Seeder
                 'quantity' => fake()->numberBetween(0, 10),
                 'stock' => fake()->boolean(),
                 'images' => fake()->imageUrl(),
+                'category_id' => Category::all()->random()->id,
                 'user_id' => User::all()->random()->id
             ]);
         }
