@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Purchase;
 use App\Models\Role;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
@@ -25,7 +26,7 @@ class UsersSeeder extends Seeder
                 'email' => fake()->email(),
                 'password' => fake()->password(),
                 'image' => Str::random(),
-                'role_id' => Role::all()->random()->id
+                'role_id' => Role::all()->random()->id,
             ]);
         }
     }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UserController extends Controller
 {
     /**
@@ -83,10 +85,17 @@ class UserController extends Controller
         //
     }
 
+    // Relaciones
     
     public function role($id)
     {
         $user = User::find($id);
         return $user->role ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
+    }
+
+    public function purchases($id)
+    {
+        $purchases = User::find($id)->purchases;
+        return $purchases;
     }
 }

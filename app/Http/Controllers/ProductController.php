@@ -96,4 +96,10 @@ class ProductController extends Controller
         $product = Product::find($id);
         return $product->user ?? response()->json(['msg' => 'El usuario con id '.$id.' no es un vendedor'], 404);
     }
+
+    public function purchases($id)
+    {
+        $purchases = Product::find($id)->purchases;
+        return $purchases;
+    }
 }
