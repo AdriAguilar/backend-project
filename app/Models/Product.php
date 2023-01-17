@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Comment;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,11 @@ class Product extends Model
     ];
 
     // Relaciones
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->where('role_id', 3);
+    }
     
     public function category()
     {
