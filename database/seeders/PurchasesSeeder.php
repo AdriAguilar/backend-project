@@ -26,7 +26,7 @@ class PurchasesSeeder extends Seeder
                 'address' => fake()->address(),
                 'status' => fake()->randomElement(['pending', 'completed' , 'canceled']),
                 'payment_method' => fake()->randomElement(['Paypal', 'Credit Card']),
-                'invoice_number' => Str::random(12)
+                'invoice_number' => fake()->unique()->randomNumber(9)
             ]);
         }
     }
