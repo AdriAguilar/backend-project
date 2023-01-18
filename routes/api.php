@@ -37,6 +37,7 @@ Route::prefix('product')->group(function () {
     Route::get('/{id}/category', [ProductController::class, 'category']);
     Route::get('/{id}/seller', [ProductController::class, 'seller']);
     Route::get('/{id}/purchases', [ProductController::class, 'purchases']);
+    Route::get('/{id}/comments', [ProductController::class, 'comments']);
 });
 
 // Comment

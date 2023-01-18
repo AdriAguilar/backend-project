@@ -99,7 +99,13 @@ class ProductController extends Controller
 
     public function purchases($id)
     {
-        $purchases = Product::find($id)->purchases;
-        return $purchases;
+        $purchases = Product::find($id);
+        return $purchases->purchases;
+    }
+
+    public function comments($id)
+    {
+        $product = Product::find($id);
+        return $product->comments;
     }
 }
