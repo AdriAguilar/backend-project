@@ -28,6 +28,7 @@ Route::prefix('user')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::get('/{id}/role', [UserController::class, 'role']);
     Route::get('/{id}/purchases', [UserController::class, 'purchases']);
+    Route::get('/{id}/comments', [UserController::class, 'comments']);
 });
 
 // Product

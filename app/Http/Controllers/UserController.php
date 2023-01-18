@@ -96,6 +96,12 @@ class UserController extends Controller
     public function purchases($id)
     {
         $purchases = User::find($id)->purchases;
-        return $purchases;
+        return $purchases ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
+    }
+
+    public function comments($id)
+    {
+        $user = User::find($id);
+        return $user->comments ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
     }
 }
