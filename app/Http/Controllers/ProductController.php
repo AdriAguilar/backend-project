@@ -100,12 +100,12 @@ class ProductController extends Controller
     public function purchases($id)
     {
         $purchases = Product::find($id);
-        return $purchases->purchases;
+        return $purchases->purchases ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 
     public function comments($id)
     {
         $product = Product::find($id);
-        return $product->comments;
+        return $product->comments ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 }

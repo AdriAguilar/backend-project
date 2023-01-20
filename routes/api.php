@@ -48,3 +48,11 @@ Route::prefix('comment')->group(function () {
     Route::get('/{id}/product', [CommentController::class, 'product']);
     Route::get('/{id}/user', [CommentController::class, 'user']);
 });
+
+// Purchase
+Route::prefix('purchase')->group(function () {
+    Route::get('', [PurchaseController::class, 'index']);
+    Route::get('/{id}', [PurchaseController::class, 'show']);
+    Route::get('/{id}/product', [PurchaseController::class, 'product']);
+    Route::get('/{id}/user', [PurchaseController::class, 'user']);
+});
