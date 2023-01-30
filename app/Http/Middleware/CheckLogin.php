@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CheckLogin
 {
@@ -17,10 +17,18 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        if ( !Auth::check() ) {
-            return response()->json(['error' => 'Debes logearte para poder acceder a esta ruta'], 401);
+        $token = $request->header('Authorization');
+
+        if (!$token) {
+            return response()->json(['error' => 'Token not provided'], 401);
         }
-        
+    
+        $user = User::where('api_token', $token)->first();
+    
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         return $next($request);
     }
 }

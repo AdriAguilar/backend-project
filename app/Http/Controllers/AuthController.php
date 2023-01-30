@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     public function __construct() {
-        // $this->middleware('check.login', ['except' => ['register', 'login']]);
+        $this->middleware('check.login', ['except' => ['register', 'login']]);
     }
 
     public function register(Request $request)
@@ -56,11 +56,15 @@ class AuthController extends Controller
         if( $data->fails() ) {
             return response()->json($data->errors(), 400);
         }
+
+        if( Auth::guard('api')->check() ) {
+            return response()->json(['message' => 'Ya hay un usuario logeado'], 401);
+        }
         
-        if( Auth::attempt( $data->validated() ) ) {
+        if( Auth::guard('api')->attempt( $data->validated() ) ) {
             return response()->json([
                 'message' => 'Usuario logeado correctamente',
-                'token' => Auth::user()->createToken("token")
+                'token' => Auth::guard('api')->user()->createToken("token")->plainTextToken
             ]);
         }
 
