@@ -21,13 +21,8 @@ class RolesSeeder extends Seeder
         ]);
 
         DB::table('roles')->insert([
-            'name' => 'Client',
-            'description' => 'Just can buy products'
-        ]);
-
-        DB::table('roles')->insert([
-            'name' => 'Seller',
-            'description' => 'Just can sell products'
+            'name' => 'User',
+            'description' => 'Can buy and sell products'
         ]);
     }
 }
