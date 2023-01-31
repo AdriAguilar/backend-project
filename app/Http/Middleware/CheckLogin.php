@@ -19,7 +19,7 @@ class CheckLogin
     public function handle(Request $request, Closure $next)
     {
         if( !Auth::guard('api')->check() ) {
-            return response()->json(['error' => 'No estás autorizado'], 401);
+            return response()->json(['error' => 'No estás autorizado. Debes logearte'], 401);
         }
 
         return $next($request);

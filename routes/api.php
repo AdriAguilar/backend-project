@@ -31,37 +31,42 @@ Route::prefix('auth')->group(function () {
     Route::get('/who', [AuthController::class, 'whoIsLogged']);
 });
 
-// User
-Route::prefix('user')->group(function () {
-    Route::get('', [UserController::class, 'index']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::get('/{id}/role', [UserController::class, 'role']);
-    Route::get('/{id}/purchases', [UserController::class, 'purchases']);
-    Route::get('/{id}/comments', [UserController::class, 'comments']);
-});
+// Routes protected by Auth
+Route::middleware('check.login')->group(function () {
 
-// Product
-Route::prefix('product')->group(function () {
-    Route::get('', [ProductController::class, 'index']);
-    Route::get('/{id}', [ProductController::class, 'show']);
-    Route::get('/{id}/category', [ProductController::class, 'category']);
-    Route::get('/{id}/seller', [ProductController::class, 'seller']);
-    Route::get('/{id}/purchases', [ProductController::class, 'purchases']);
-    Route::get('/{id}/comments', [ProductController::class, 'comments']);
-});
-
-// Comment
-Route::prefix('comment')->group(function () {
-    Route::get('', [CommentController::class, 'index']);
-    Route::get('/{id}', [CommentController::class, 'show']);
-    Route::get('/{id}/product', [CommentController::class, 'product']);
-    Route::get('/{id}/user', [CommentController::class, 'user']);
-});
-
-// Purchase
-Route::prefix('purchase')->group(function () {
-    Route::get('', [PurchaseController::class, 'index']);
-    Route::get('/{id}', [PurchaseController::class, 'show']);
-    Route::get('/{id}/product', [PurchaseController::class, 'product']);
-    Route::get('/{id}/user', [PurchaseController::class, 'user']);
+    // User
+    Route::prefix('user')->group(function () {
+        Route::get('', [UserController::class, 'index']);
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::get('/{id}/role', [UserController::class, 'role']);
+        Route::get('/{id}/purchases', [UserController::class, 'purchases']);
+        Route::get('/{id}/comments', [UserController::class, 'comments']);
+    });
+    
+    // Product
+    Route::prefix('product')->group(function () {
+        Route::get('', [ProductController::class, 'index']);
+        Route::get('/{id}', [ProductController::class, 'show']);
+        Route::get('/{id}/category', [ProductController::class, 'category']);
+        Route::get('/{id}/seller', [ProductController::class, 'seller']);
+        Route::get('/{id}/purchases', [ProductController::class, 'purchases']);
+        Route::get('/{id}/comments', [ProductController::class, 'comments']);
+    });
+    
+    // Comment
+    Route::prefix('comment')->group(function () {
+        Route::get('', [CommentController::class, 'index']);
+        Route::get('/{id}', [CommentController::class, 'show']);
+        Route::get('/{id}/product', [CommentController::class, 'product']);
+        Route::get('/{id}/user', [CommentController::class, 'user']);
+    });
+    
+    // Purchase
+    Route::prefix('purchase')->group(function () {
+        Route::get('', [PurchaseController::class, 'index']);
+        Route::get('/{id}', [PurchaseController::class, 'show']);
+        Route::get('/{id}/product', [PurchaseController::class, 'product']);
+        Route::get('/{id}/user', [PurchaseController::class, 'user']);
+    });
+    
 });
