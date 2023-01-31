@@ -56,28 +56,37 @@ class AuthController extends Controller
         if( $data->fails() ) {
             return response()->json($data->errors(), 400);
         }
+        
+        if( !Auth::attempt( $data->validated() ) ) {
+            return response()->json(['error' => 'Credenciales incorrectas'], 401);
+        }
 
-        if( Auth::guard('api')->check() ) {
-            return response()->json(['message' => 'Ya hay un usuario logeado'], 401);
+        $user = Auth::user();
+
+        if( $user->api_token ) {
+            return response()->json(['error' => 'Ya existe un usuario logeado']);
         }
         
-        if( Auth::guard('api')->attempt( $data->validated() ) ) {
-            return response()->json([
-                'message' => 'Usuario logeado correctamente',
-                'token' => Auth::guard('api')->user()->createToken("token")->plainTextToken
-            ]);
-        }
+        $token = Str::random(60);
+        $user->api_token = $token;
+        $user->save();
 
-        return response()->json(['error' => 'Credenciales incorrectas'], 401);
+        return response()->json([
+            'message' => 'Usuario logeado correctamente',
+            'token' => $token
+        ]);
     }
 
     public function logout()
     {
-        Auth::logout();
+        $user = Auth::guard('api')->user();
+        $user->api_token = null;
+        $user->save();
+        
         return response()->json(['message' => 'Sesión cerrada con éxito']);
     }
 
     public function whoIsLogged() {
-        return response()->json( auth()->user() );
+        return response()->json( Auth::guard('api')->user() );
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text('api_token')->after('password')->nullable();
+            $table->string('api_token', 60)->after('password')->unique()->nullable();
         });
     }
 
