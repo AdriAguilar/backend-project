@@ -38,52 +38,64 @@ class AuthController extends Controller
         }
         
         // Crear usuario
-        $user = User::create( $data->validated() );     
+        $user = User::create( $data->validated() );  
+        
+        // Crear token
+        $token = $user->createToken('access_token')->accessToken;
 
         return response()->json([
             'message' => 'Usuario creado correctamente!',
-            'user' => $user
+            'user' => $user,
+            'token' => $token
         ], 201);
     }
     public function login(Request $request)
     {
+        // Username or email
+        $field = filter_var($request->input('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        
+
         // Validar
-        $data = Validator::make($request->only(['username', 'password']) ,[
+        $data = Validator::make($request->all() ,[
             'username' => 'required|min:3|max:25',
-            'password' => 'required'
+            'password' => 'required',
+            $field => ( $field === 'email' ) ? 'email': 'required|min:3|max:25'
+
         ]);
 
         if( $data->fails() ) {
             return response()->json($data->errors(), 400);
         }
-        
-        if( !Auth::attempt( $data->validated() ) ) {
-            return response()->json(['error' => 'Credenciales incorrectas'], 401);
+
+        $request->merge([$field => $request->input('username')]);
+        $credentials = $request->only($field, 'password');
+
+        if( !Auth::attempt( $credentials ) ) {
+            return response()->json(['error' => 'Credenciales incorrectas.'], 401);
         }
 
         $user = Auth::user();
 
-        if( $user->api_token ) {
-            return response()->json(['error' => 'Ya existe un usuario logeado']);
-        }
-        
-        $token = Str::random(60);
-        $user->api_token = $token;
-        $user->save();
+        $token = $user->createToken('access_token')->accessToken;
 
         return response()->json([
-            'message' => 'Usuario logeado correctamente',
+            'success' => 'Usuario logeado correctamente',
             'token' => $token
         ]);
     }
 
     public function logout()
     {
-        $user = Auth::guard('api')->user();
-        $user->api_token = null;
-        $user->save();
+        $user = auth()->guard('api')->user();
+
+        foreach ($user->tokens as $token) {
+            $token->delete();
+        }
         
-        return response()->json(['message' => 'Sesión cerrada con éxito']);
+        return response()->json([
+            'success' => 'Sesión cerrada con éxito',
+            'user' => $user
+        ]);
     }
 
     public function whoIsLogged() {
