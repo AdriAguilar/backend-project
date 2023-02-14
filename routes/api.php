@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +39,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('check.login')->group(function () {
 
     // User
-    Route::prefix('user')->group(function () {
+    Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'index']);
         Route::get('/{id}', [UserController::class, 'show']);
         Route::get('/{id}/role', [UserController::class, 'role']);
@@ -46,7 +48,7 @@ Route::middleware('check.login')->group(function () {
     });
     
     // Product
-    Route::prefix('product')->group(function () {
+    Route::prefix('products')->group(function () {
         Route::get('', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::get('/{id}/category', [ProductController::class, 'category']);
@@ -56,7 +58,7 @@ Route::middleware('check.login')->group(function () {
     });
     
     // Comment
-    Route::prefix('comment')->group(function () {
+    Route::prefix('comments')->group(function () {
         Route::get('', [CommentController::class, 'index']);
         Route::get('/{id}', [CommentController::class, 'show']);
         Route::get('/{id}/product', [CommentController::class, 'product']);
@@ -64,11 +66,25 @@ Route::middleware('check.login')->group(function () {
     });
     
     // Purchase
-    Route::prefix('purchase')->group(function () {
+    Route::prefix('purchases')->group(function () {
         Route::get('', [PurchaseController::class, 'index']);
         Route::get('/{id}', [PurchaseController::class, 'show']);
         Route::get('/{id}/product', [PurchaseController::class, 'product']);
         Route::get('/{id}/user', [PurchaseController::class, 'user']);
+    });
+
+    // Chat
+    Route::prefix('chats')->group(function () {
+        Route::get('', [ChatController::class, 'index']);
+        Route::get('/{id}', [ChatController::class, 'show']);
+        Route::post('/create', [ChatController::class, 'store']);
+    });
+
+    // Message
+    Route::prefix('messages')->group(function () {
+        Route::get('', [MessageController::class, 'index']);
+        Route::post('', [MessageController::class, 'store']);
+        Route::get('/{id}', [MessageController::class, 'show']);
     });
     
 });
