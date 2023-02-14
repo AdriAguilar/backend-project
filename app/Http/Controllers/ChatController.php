@@ -16,15 +16,20 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $user_1 = User::where('username', $request->input('user_1'))->first();
-        $user_2 = User::where('username', $request->input('user_2'))->first();
+        if( !$user_1 ) return response()->json([ 'error' => 'Usuario ' . $request->input('user_1') . ' no encontrado' ], 404);
 
-        if( !$user_1 || !$user_2 ) return response()->json([ 'error' => 'Usuario no encontrado' ], 404);
+        $user_2 = User::where('username', $request->input('user_2'))->first();
+        if( !$user_2 ) return response()->json([ 'error' => 'Usuario ' . $request->input('user_2') . ' no encontrado' ], 404);
+
+        if ( $user_1 == $user_2 ) return response()->json([ 'error' => 'No se puede crear un chat consigo mismo' ], 400);
+
+        if( Chat::where('user_1', $user_1->id)->where('user_2', $user_2->id)->exists() || Chat::where('user_1', $user_2->id)->where('user_2', $user_1->id)->exists() ) return response()->json([ 'error' => 'Ya existe un chat con esos usuarios' ], 409);
         
         $chat = Chat::create([
             'user_1' => $user_1->id,
             'user_2' => $user_2->id
         ]);
-
+        
         return response()->json([
             'message' => 'Chat creado correctamente',
             'data' => $chat,
