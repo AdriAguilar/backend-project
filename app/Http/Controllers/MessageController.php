@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Pusher\Pusher;
 use App\Models\Chat;
-use App\Models\User;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Pusher\Pusher;
 
 class MessageController extends Controller
 {
