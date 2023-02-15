@@ -3,8 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Chat;
 use App\Models\Role;
 use App\Models\Comment;
+use App\Models\Message;
 use App\Models\Product;
 use App\Models\Purchase;
 use Laravel\Passport\HasApiTokens;
@@ -74,5 +76,15 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class, 'user_chat', 'user_id', 'chat_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }
