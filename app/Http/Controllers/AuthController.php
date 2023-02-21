@@ -44,7 +44,6 @@ class AuthController extends Controller
         $token = $user->createToken('access_token')->accessToken;
 
         return response()->json([
-            'message' => 'Usuario creado correctamente!',
             'user' => $user,
             'token' => $token
         ], 201);
@@ -79,7 +78,6 @@ class AuthController extends Controller
         $token = $user->createToken('access_token')->accessToken;
 
         return response()->json([
-            'success' => 'Usuario logeado correctamente',
             'user' => $user,
             'token' => $token
         ]);
