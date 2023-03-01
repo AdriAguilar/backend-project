@@ -16,15 +16,15 @@ class CategoriesSeeder extends Seeder
     public function run()
     {
         DB::table('categories')->insert([
-            'name' => 'PC'
+            'name' => 'Juegos'
         ]);
         
         DB::table('categories')->insert([
-            'name' => 'PS5'
+            'name' => 'Componentes/PC'
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'Switch'
+            'name' => 'Consolas'
         ]);
     }
 }

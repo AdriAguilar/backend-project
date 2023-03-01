@@ -24,6 +24,10 @@ class Product extends Model
         'user_id'
     ];
 
+    protected $attributes = [
+        'images' => null
+    ];
+
     // Relaciones
 
     public function user()

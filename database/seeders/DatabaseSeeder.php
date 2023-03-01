@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(RolesSeeder::class);
-        // $this->call(CategoriesSeeder::class);
+        $this->call(CategoriesSeeder::class);
         // $this->call(UsersSeeder::class);
         // $this->call(ProductsSeeder::class);
         // $this->call(CommentsSeeder::class);

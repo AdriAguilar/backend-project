@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -47,8 +48,14 @@ Route::middleware('check.login')->group(function () {
         Route::get('/{id}/comments', [UserController::class, 'comments']);
     });
     
+    // Category
+    Route::prefix('categories')->group(function () {
+        Route::get('', [CategoryController::class, 'index']);
+    });
+    
     // Product
     Route::prefix('products')->group(function () {
+        Route::post('/create', [ProductController::class, 'store']);
         Route::get('', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::get('/{id}/category', [ProductController::class, 'category']);
