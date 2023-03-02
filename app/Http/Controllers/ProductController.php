@@ -48,7 +48,7 @@ class ProductController extends Controller
         ]);
     
         if ($data->fails()) {
-            return response()->json($data->errors());
+            return response()->json($data->errors(), 400);
         }
     
         $quantity = $request->input('quantity');
