@@ -59,6 +59,7 @@ Route::middleware('check.login')->group(function () {
         Route::get('', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::get('/{id}/category', [ProductController::class, 'category']);
+        Route::get('/{id}/images', [ProductController::class, 'images']);
         Route::get('/{id}/seller', [ProductController::class, 'seller']);
         Route::get('/{id}/purchases', [ProductController::class, 'purchases']);
         Route::get('/{id}/comments', [ProductController::class, 'comments']);

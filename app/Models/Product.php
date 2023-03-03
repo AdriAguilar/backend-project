@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Image;
 use App\Models\Comment;
 use App\Models\Category;
 use App\Models\Purchase;
@@ -24,10 +25,6 @@ class Product extends Model
         'user_id'
     ];
 
-    protected $attributes = [
-        'images' => null
-    ];
-
     // Relaciones
 
     public function user()
@@ -38,6 +35,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 
     public function purchases()

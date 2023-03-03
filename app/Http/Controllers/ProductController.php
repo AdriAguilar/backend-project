@@ -42,7 +42,6 @@ class ProductController extends Controller
             'price' => 'required|numeric|gt:0',
             'quantity' => 'required|integer|not_in:0',
             'stock' => 'boolean',
-            'images' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'user_id' => 'required|exists:users,id'
         ]);
@@ -58,6 +57,17 @@ class ProductController extends Controller
         $productData['stock'] = $stock;
     
         $product = Product::create($productData);
+
+        $images = $request->input('images');
+        
+        if( !empty($images) ) {
+            foreach( $images as $image ) {
+                $product->images()->create([
+                    'product_id' => $product->id,
+                    'image' => $image
+                ]);
+            }
+        }
     
         return response()->json($product, 201);
     }    
@@ -113,6 +123,12 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         return $product->category ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
+    }
+
+    public function images($id)
+    {
+        $product = Product::find($id);
+        return $product->images ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 
     public function seller($id)
