@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -55,21 +56,23 @@ class ProductController extends Controller
     
         $productData = $data->validated();
         $productData['stock'] = $stock;
-    
-        $product = Product::create($productData);
-
-        $images = $request->input('images');
         
-        if( !empty($images) ) {
-            foreach( $images as $image ) {
-                $product->images()->create([
-                    'product_id' => $product->id,
-                    'image' => $image
-                ]);
-            }
-        }
+        $file = $request->file('images');
+        
+        $imageName = time().'.'.$file->extension();
+        $imagePath = public_path().'storage\images\products';
+        
+        $file->move($imagePath, $imageName);
+        
+
+        $product = Product::create($productData);
+        
+        $image = Image::create([
+            "product_id" => $product['id'],
+            "image" => $imageName
+        ]);
     
-        return response()->json($product, 201);
+        return response()->json([$product, $image], 201);
     }    
 
     /**
@@ -127,8 +130,16 @@ class ProductController extends Controller
 
     public function images($id)
     {
-        $product = Product::find($id);
-        return $product->images ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
+        $product = Product::findOrFail($id);
+
+        $imagePathArray = [];
+
+        foreach ( $product->images as $image ) {
+            $imagePath = public_path("storage\images\products\\" . $image['image']);
+            $imagePathArray = $imagePath;
+        }
+
+        return $imagePathArray ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 
     public function seller($id)
