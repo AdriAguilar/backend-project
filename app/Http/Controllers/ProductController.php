@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -43,6 +44,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|gt:0',
             'quantity' => 'required|integer|not_in:0',
             'stock' => 'boolean',
+            'images' => 'required',
             'category_id' => 'required|exists:categories,id',
             'user_id' => 'required|exists:users,id'
         ]);
@@ -53,26 +55,22 @@ class ProductController extends Controller
     
         $quantity = $request->input('quantity');
         $stock = ($quantity > 0);
-    
-        $productData = $data->validated();
-        $productData['stock'] = $stock;
         
         $file = $request->file('images');
-        
         $imageName = time().'.'.$file->extension();
-        $imagePath = public_path().'storage\images\products';
+        $imagePath = $file->storeAs('public/images/products', $imageName);        
         
-        $file->move($imagePath, $imageName);
-        
+        $productData = $data->validated();
+        $productData['stock'] = $stock;
+        $productData['images'] = Storage::url($imagePath);
+
+        // dd($productData);
 
         $product = Product::create($productData);
         
-        $image = Image::create([
-            "product_id" => $product['id'],
-            "image" => $imageName
-        ]);
+        
     
-        return response()->json([$product, $image], 201);
+        return response()->json($product, 201);
     }    
 
     /**
@@ -126,20 +124,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         return $product->category ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
-    }
-
-    public function images($id)
-    {
-        $product = Product::findOrFail($id);
-
-        $imagePathArray = [];
-
-        foreach ( $product->images as $image ) {
-            $imagePath = public_path("storage\images\products\\" . $image['image']);
-            $imagePathArray = $imagePath;
-        }
-
-        return $imagePathArray ?? response()->json(['msg' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 
     public function seller($id)
