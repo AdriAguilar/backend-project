@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::find($id) ?? response()->json(['msg' => 'Alumno con id '.$id.' no encontrado'], 404);
+        return User::find($id) ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
     }
 
     /**

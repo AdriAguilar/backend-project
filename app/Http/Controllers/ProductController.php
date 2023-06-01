@@ -57,7 +57,7 @@ class ProductController extends Controller
         $stock = ($quantity > 0);
         
         $file = $request->file('images');
-        $imageName = time().'.'.$file->extension();
+        $imageName = uniqid(time().'_').'.'.$file->extension();
         $imagePath = $file->storeAs('public/images/products', $imageName);        
         
         $productData = $data->validated();
