@@ -24,26 +24,17 @@ class MessageController extends Controller
 
         if(!$chat ) return response()->json([ 'error' => 'Chat no encontrado' ], 404);
         
-        Message::create([
+        $message = Message::create([
             'chat_id' => $chat->id,
             'user_id' => $user->id,
             'message' => $request->input('message'),
         ]);
 
-        $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => true
-            ]
-        );
-        
-        $pusher->trigger('chat.'. $chat->id, 'message-sent', $request->message);
+
 
         return response()->json([
            'success' => 'Mensaje enviado correctamente',
+           $message
         ]);
     }
 
