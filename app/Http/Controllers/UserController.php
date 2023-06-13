@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -102,5 +103,26 @@ class UserController extends Controller
     {
         $user = User::find($id);
         return $user->comments ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
+    }
+
+    public function products($id)
+    {
+        $user = User::find($id);
+        return $user->products ?? response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
+    }
+    
+    public function chats($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['msg' => 'Usuario con id '.$id.' no encontrado'], 404);
+        }
+    
+        $chats = Chat::where('user_1', $id)
+                    ->orWhere('user_2', $id)
+                    ->get();
+    
+        return $chats;
     }
 }

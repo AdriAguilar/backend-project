@@ -46,6 +46,8 @@ Route::middleware('check.login')->group(function () {
         Route::get('/{id}/role', [UserController::class, 'role']);
         Route::get('/{id}/purchases', [UserController::class, 'purchases']);
         Route::get('/{id}/comments', [UserController::class, 'comments']);
+        Route::get('/{id}/products', [UserController::class, 'products']);
+        Route::get('/{id}/chats', [UserController::class, 'chats']);
     });
     
     // Category
