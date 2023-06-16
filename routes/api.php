@@ -60,6 +60,8 @@ Route::middleware('check.login')->group(function () {
         Route::post('/create', [ProductController::class, 'store']);
         Route::get('', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
+        Route::put('/{id}/edit', [ProductController::class, 'update']);
+        Route::delete('/{id}', [ProductController::class, 'destroy']);
         Route::get('/{id}/category', [ProductController::class, 'category']);
         Route::get('/{id}/seller', [ProductController::class, 'seller']);
         Route::get('/{id}/purchases', [ProductController::class, 'purchases']);

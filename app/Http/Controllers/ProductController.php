@@ -39,8 +39,8 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = Validator::make($request->all(), [
-            'name' => 'required|min:2',
-            'description' => 'required|max:512',
+            'name' => 'required|min:3|max:32',
+            'description' => 'required|min:256|max:1024',
             'price' => 'required|numeric|gt:0',
             'quantity' => 'required|integer|not_in:0',
             'stock' => 'boolean',
@@ -52,7 +52,7 @@ class ProductController extends Controller
         if ($data->fails()) {
             return response()->json($data->errors(), 400);
         }
-    
+        
         $quantity = $request->input('quantity');
         $stock = ($quantity > 0);
         
@@ -100,22 +100,75 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['error' => 'Producto con id '.$id.' no encontrado'], 404);
+        }
+        
+        $data = Validator::make($request->all(), [
+            'name' => 'min:3|max:32',
+            'description' => 'min:256|max:1024',
+            'price' => 'numeric|gt:0',
+            'quantity' => 'integer|not_in:0',
+            'images' => 'sometimes',
+            'category_id' => 'exists:categories,id'
+        ]);
+
+        if ($data->fails()) {
+            return response()->json($data->errors(), 400);
+        }
+
+        $quantity = $request->input('quantity');
+        $stock = is_null($quantity) ? $product->stock : ($quantity > 0);
+
+        $file = $request->file('images');
+        if ($file) {
+            $imageName = uniqid(time() . '_') . '.' . $file->extension();
+            $imagePath = $file->storeAs('public/images/products', $imageName);
+    
+            // Eliminar la imagen anterior si existe
+            if ($product->images) {
+                Storage::delete(str_replace('/storage', 'public', $product->images));
+            }
+    
+            $product->images = Storage::url($imagePath);
+        }
+
+        $product->name = $request->input('name', $product->name);
+        $product->description = $request->input('description', $product->description);
+        $product->price = $request->input('price', $product->price);
+        $product->quantity = $request->input('quantity', $product->quantity);
+        $product->stock = $stock;
+        $product->category_id = $request->input('category_id', $product->category_id);
+
+        $product->save();
+
+        return response()->json($product, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        if( $product ) {
+            if( $product->images ) {
+                Storage::delete(str_replace('/storage', 'public', $product->images));
+            }
+            Product::destroy($id);
+            return response()->json(['success' => 'Producto '.$id.' eliminado correctamente'], 200);
+        }
+
+        return response()->json(['error' => 'Producto con id '.$id.' no encontrado'], 404);
     }
 
     // Relaciones
