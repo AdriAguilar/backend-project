@@ -43,6 +43,7 @@ Route::middleware('check.login')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'index']);
         Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}/edit', [UserController::class, 'update']);
         Route::get('/{id}/role', [UserController::class, 'role']);
         Route::get('/{id}/purchases', [UserController::class, 'purchases']);
         Route::get('/{id}/comments', [UserController::class, 'comments']);

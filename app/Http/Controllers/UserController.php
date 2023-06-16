@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 class UserController extends Controller
@@ -66,12 +67,33 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        if( !$user ) return response()->json(['error' => 'Usuario con id '.$id.' no encontrado'], 404);
+
+        $file = $request->file('image');
+        if ($file) {
+            $imageName = uniqid(time() . '_') . '.' . $file->extension();
+            $imagePath = $file->storeAs('public/images/profiles', $imageName);
+    
+            // Eliminar la imagen anterior si existe
+            if ($user->image) {
+                Storage::delete(str_replace('/storage', 'public', $user->image));
+            }
+    
+            $user->image = Storage::url($imagePath);
+        }
+
+        $user->name = $request->input('name') ?? $user->name;
+        $user->username = $request->input('username') ?? $user->username;
+        $user->email = $request->input('email') ?? $user->email;
+
+        $user->save();
+
+        return response()->json($user, 200);
     }
 
     /**
